@@ -106,11 +106,40 @@ def compute_yield_risk(GDD, P, pH, N, crop):
 
     return yield_risk
 
+def recommend_biostimulant(yield_risk):
+    """Prints recommendations based on yield risk."""
+    T1, T2, T3 = 5000, 10000, 20000  # Example threshold values, adjust based on real data
+
+    if yield_risk < T1:
+        print("Yield risk is low. No intervention needed.")
+    elif yield_risk < T2:
+        print("Yield risk is moderate. Monitor conditions and consider minor adjustments.")
+    elif yield_risk < T3:
+        print("Yield risk is high. Consider applying a biostimulant.")
+    else:
+        print("\n⚠️ Critical Yield Risk Detected! ⚠️")
+        print("🔹 Recommendation: Apply our biostimulant to enhance plant productivity.")
+        print("✅ Benefits:")
+        print("   • Better transport of sugars and nutrients")
+        print("   • Promotion of cell division")
+        print("   • Fatty acids biosynthesis and transport\n")
+
 if __name__ == "__main__":
-    location_coords = [7.57327, 47.558399, 279]  # lon, lat, altitude
-    crop_name = "Rice"
-    
-    start_date_colture = "2025-01-01T+00:00"
+    # Get user input for location coordinates
+    lon = float(input("Enter longitude: "))
+    lat = float(input("Enter latitude: "))
+    alt = float(input("Enter altitude: "))
+    location_coords = [lon, lat, alt]
+
+    # Get user input for crop type
+    print("\nAvailable crops:", ", ".join(CROP_OPTIMAL_VALUES.keys()))
+    crop_name = input("Enter crop name: ")
+    while crop_name not in CROP_OPTIMAL_VALUES:
+        print("Invalid crop name. Please choose from:", ", ".join(CROP_OPTIMAL_VALUES.keys()))
+        crop_name = input("Enter crop name: ")
+
+    # Get user input for start date
+    start_date_colture = input("Enter start date (YYYY-MM-DD): ") + "T+00:00"
     today_date = datetime.datetime.now().strftime("%Y-%m-%dT+00:00")
     timestamp_range = f"{start_date_colture}/{today_date}"
 
@@ -122,7 +151,13 @@ if __name__ == "__main__":
         print("Error fetching data. Check API response.")
     else:
         GDD = compute_gdd(Tmax_values, Tmin_values)
-        N = 0.08  # Example nitrogen value; should be fetched from a proper source
+        
+        # Get user input for nitrogen value
+        N = float(input("Enter nitrogen value (between 0 and 1): "))
+        while not 0 <= N <= 1:
+            N = float(input("Invalid value. Enter nitrogen value between 0 and 1: "))
+            
         yield_risk = compute_yield_risk(GDD, P, pH, N, crop_name)
 
         print(f"Yield Risk for {crop_name}: {yield_risk:.2f}")
+        recommend_biostimulant(yield_risk)

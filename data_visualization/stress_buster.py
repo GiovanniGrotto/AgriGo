@@ -1,5 +1,9 @@
 import requests
 from collections import defaultdict
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env
 
 
 def fetch_daily_temperatures(latitude, longitude):
@@ -14,7 +18,7 @@ def fetch_daily_temperatures(latitude, longitude):
     }
     headers = {
         "accept": "*/*",
-        "ApiKey": "d4f087c7-7efc-41b4-9292-0f22b6199215"
+        "ApiKey": os.getenv('LONG_KEY')
     }
     response = requests.get(url, headers=headers, params=params)
     if response.status_code == 200:
@@ -98,21 +102,58 @@ def get_value_for_measure(daily_data, measure_label):
         # Debugging print to see the exact measure labels
         # print(f"Checking: {entry['measureLabel']} against {measure_label}")
         if entry['measureLabel'].strip() == measure_label.strip():
-            print(f"Found {measure_label} with value: {entry['dailyValue']}")
             return float(entry['dailyValue'])
     return None
 
+<<<<<<< HEAD:data_visualization/main.py
+=======
+def get_stress_recommendations(diurnal_heat_stress, nighttime_heat_stress, frost_stress, drought_risk):
+    recommendations = []
+    
+    # High temperature stress recommendations
+    if diurnal_heat_stress > 6:
+        recommendations.append(
+            "High temperature stress detected! Recommendations:\n"
+            "- Apply biostimulant containing vegetal extracts to enhance heat tolerance\n"
+            "- Consider additional irrigation during peak heat hours\n"
+            "- Use of foliar applications to reduce plant stress"
+        )
+    
+    # Night temperature stress recommendations
+    if nighttime_heat_stress > 6:
+        recommendations.append(
+            "Night temperature stress detected! Recommendations:\n"
+            "- Apply biostimulant to help plant recovery during night hours\n"
+            "- Monitor plant health closely\n"
+            "- Consider adjusting irrigation timing"
+        )
+    
+    # Frost stress recommendations
+    if frost_stress > 6:
+        recommendations.append(
+            "Frost stress risk detected! Recommendations:\n"
+            "- Apply protective biostimulant before forecasted frost events\n"
+            "- Consider frost protection methods\n"
+            "- Monitor soil moisture levels"
+        )
+    
+    # Drought stress recommendations
+    if drought_risk == "High risk":
+        recommendations.append(
+            "High drought risk detected! Recommendations:\n"
+            "- Apply biostimulant to enhance drought tolerance\n"
+            "- Optimize irrigation scheduling\n"
+            "- Consider soil moisture conservation techniques"
+        )
+    
+    return recommendations
+>>>>>>> 9d67645 (Fix all the risks assessment and add reccomandation):data_visualization/stress_buster.py
 
 def print_daily_risks(daily_data, crop):
-    """Print the risk levels for each day based on the data."""
-    # Group the data by date
+    """Print the risk levels and recommendations for each day with emojis."""
     data_by_date = defaultdict(list)
     for entry in daily_data:
         data_by_date[entry['date']].append(entry)
-
-    print("Data by date:")
-    for date in data_by_date:
-        print(date)
 
     for date, data in data_by_date.items():
         tmax = get_value_for_measure(data, 'TempAir_DailyMax (C)')
@@ -122,9 +163,8 @@ def print_daily_risks(daily_data, crop):
         evapotranspiration = get_value_for_measure(data, 'Referenceevapotranspiration_DailySum (mm)')
         soil_moisture = get_value_for_measure(data, 'Soilmoisture_0to10cm_DailyAvg (vol%)')
 
-        if tmax is None or tmin is None or avg_temp is None or rainfall is None or evapotranspiration is None or soil_moisture is None:
-            print(f"Missing data for {date}")
-            print(f"tmax: {tmax}, tmin: {tmin}, avg_temp: {avg_temp}, rainfall: {rainfall}, evapotranspiration: {evapotranspiration}, soil_moisture: {soil_moisture}")
+        if any(x is None for x in [tmax, tmin, avg_temp, rainfall, evapotranspiration, soil_moisture]):
+            print(f"⚠️ Missing data for {date}")
             continue
 
         # Compute the different stress factors
@@ -134,18 +174,36 @@ def print_daily_risks(daily_data, crop):
         drought_risk = compute_drought_risk(rainfall, evapotranspiration, soil_moisture, avg_temp)
 
         # Print the results
-        print(f"Date: {date}")
-        print(f"  Diurnal Heat Stress: {diurnal_heat_stress}")
-        print(f"  Nighttime Heat Stress: {nighttime_heat_stress}")
-        print(f"  Frost Stress: {frost_stress}")
-        print(f"  Drought Risk: {drought_risk}")
-        print()
+        print(f"\n📅 Date: {date[:10]}")
+        print(f"  🌡️ Diurnal Heat Stress: {diurnal_heat_stress:.2f}")
+        print(f"  🌙 Nighttime Heat Stress: {nighttime_heat_stress:.2f}")
+        print(f"  ❄️ Frost Stress: {frost_stress:.2f}")
+        print(f"  💧 Drought Risk: {drought_risk}")
+
+        # Get and print recommendations if needed
+        recommendations = get_stress_recommendations(
+            diurnal_heat_stress, 
+            nighttime_heat_stress, 
+            frost_stress, 
+            drought_risk
+        )
+        
+        if recommendations:
+            print("\n⚠️ RECOMMENDATIONS:")
+            for rec in recommendations:
+                print(f"🔸 {rec}")
+            print("\n📝 Note: Our biostimulant products contain selected vegetal extracts that help plants:")
+            print("🌱 - Tolerate and quickly overcome stress conditions")
+            print("🌾 - Preserve yield during stress periods")
+            print("🌿 - Optimize plant growth when applied regularly")
 
 
 if __name__ == "__main__":
-    daily_data = fetch_daily_temperatures(47.5, 7.5)
-    
-    # Choose a crop for analysis (e.g., Soybean)
-    crop = "Soybean"
-    
+    print("🌍 Weather Risk Assessment Tool")
+    latitude = float((input("📍 Enter latitude: ")))
+    longitude = float((input("📍 Enter longitude: ")))
+    crop = input("🌱 Enter crop (e.g. Rice, Soybean, Cotton, etc.): ")
+    print("\n⏳ Fetching data...")
+    daily_data = fetch_daily_temperatures(latitude, longitude)
+    print("\n📊 Analysis Results:")
     print_daily_risks(daily_data, crop)

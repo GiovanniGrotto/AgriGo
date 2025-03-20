@@ -105,8 +105,6 @@ def get_value_for_measure(daily_data, measure_label):
             return float(entry['dailyValue'])
     return None
 
-<<<<<<< HEAD:data_visualization/main.py
-=======
 def get_stress_recommendations(diurnal_heat_stress, nighttime_heat_stress, frost_stress, drought_risk):
     recommendations = []
     
@@ -147,7 +145,7 @@ def get_stress_recommendations(diurnal_heat_stress, nighttime_heat_stress, frost
         )
     
     return recommendations
->>>>>>> 9d67645 (Fix all the risks assessment and add reccomandation):data_visualization/stress_buster.py
+
 
 def print_daily_risks(daily_data, crop):
     """Print the risk levels and recommendations for each day with emojis."""
@@ -198,7 +196,7 @@ def print_daily_risks(daily_data, crop):
             print("🌿 - Optimize plant growth when applied regularly")
 
 
-if __name__ == "__main__":
+def stress():
     print("🌍 Weather Risk Assessment Tool")
     latitude = float((input("📍 Enter latitude: ")))
     longitude = float((input("📍 Enter longitude: ")))

@@ -8,6 +8,7 @@ load_dotenv()  # Load environment variables from .env
 HIST_KEY = os.getenv("HIST_KEY")
 BASE_URL = f'http://my.meteoblue.com/dataset/query?apikey={HIST_KEY}'
 
+
 class NitrogenStressRisk:
     CROP_OPTIMAL_VALUES = {
         "Soyabean": {"soil_moisture": (50, 70), "precipitation": (450, 700)},
@@ -99,13 +100,15 @@ class NitrogenStressRisk:
             return sum(data)/len(data)
         return None
 
+
 def print_crop_list():
     print("Available crops:")
     for crop in NitrogenStressRisk.CROP_OPTIMAL_VALUES.keys():
         print(f"• {crop}")
     print()
 
-if __name__ == "__main__":
+
+def nitrogen():
     print_crop_list()
     
     try:

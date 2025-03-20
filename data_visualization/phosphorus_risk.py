@@ -155,8 +155,8 @@ class PhosphorusStress:
             return sum(data)/len(data)
         return None
 
-def main():
-        
+
+def phosphorus():
     # Get user input
     print("\n📝 Please enter the following information:")
     
@@ -204,6 +204,3 @@ def main():
     print(f"Phosphorus Use Efficiency: {crop.calculate_PUE():.3f}")
     print("\n💡 Recommendation:")
     print(crop.recommend_biosimulants())
-
-if __name__ == "__main__":
-    main()

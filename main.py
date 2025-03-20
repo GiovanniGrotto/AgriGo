@@ -9,6 +9,10 @@ from llm import call_llm
 from disease_detection import predict_image
 from weather import predict_weather
 from collect_user_feedback import collect_feedback
+from data_visualization.nitrogen_risk import nitrogen
+from data_visualization.phosphorus_risk import phosphorus
+from data_visualization.yield_risk import yield_
+from data_visualization.stress_buster import stress
 
 # Initialize colorama
 init(autoreset=True)
@@ -61,7 +65,15 @@ def main():
                 lat, long = 47.5, 7.5
             predict_weather(lat, long)
         elif choice == '4':
-            pass
+            choice = input("Do you want to analyze: Nitrogen, Phosphorus, Yield or Stress?")
+            if choice == 'Nitrogen':
+                nitrogen()
+            elif choice == 'Phosphorus':
+                phosphorus()
+            elif choice == 'Yield':
+                yield_()
+            else:
+                stress()
         elif choice == '5':
             collect_feedback()
         elif choice == '6':

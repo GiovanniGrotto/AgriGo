@@ -124,7 +124,8 @@ def recommend_biostimulant(yield_risk):
         print("   • Promotion of cell division")
         print("   • Fatty acids biosynthesis and transport\n")
 
-if __name__ == "__main__":
+
+def yield_():
     # Get user input for location coordinates
     lon = float(input("Enter longitude: "))
     lat = float(input("Enter latitude: "))

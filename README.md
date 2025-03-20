@@ -5,6 +5,8 @@
 **AgriGo** is a comprehensive agricultural management system designed to **enhance decision-making processes**, **mitigate risks**, and **optimize crop yields**. By leveraging cutting-edge technologies such as **data visualization**, **risk analysis prediction**, **disease identification through image recognition**, and **AI-powered chat support**, **AgriGo** empowers farmers and agricultural stakeholders with actionable insights and real-time assistance to effectively manage and protect their crops. 🌱🚜
 
 ---
+[Watch the demo](https://github.com/GiovanniGrotto/Start_Hack_Syngenta/blob/master/Demo)
+---
 
 ## 🌟 **Key Features** 🌟
 

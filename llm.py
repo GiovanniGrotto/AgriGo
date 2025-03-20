@@ -9,7 +9,7 @@ load_dotenv()
 
 # Replace this with your Hugging Face access token
 access_token = os.getenv("ACCESS_TOKEN")
-repo_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+repo_id = "mistralai/Mistral-7B-Instruct-v0.3" # Updated model ID
 
 
 def call_llm(question: str):
@@ -22,7 +22,7 @@ def call_llm(question: str):
     if not question:
         question = "How can I handle the hot soil problem?"
 
-    prompt = f"We are talking about agriculture. Answer to this question in ONLY ONE LINE: {question}"
+    prompt = f"We are talking about agriculture. Answer to this question BRIEFELY: {question}"
     response = llm_client.post(
         json={
             "inputs": prompt,

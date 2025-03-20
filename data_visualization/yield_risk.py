@@ -1,8 +1,12 @@
 import requests
 import json
 import datetime
+import os
+from dotenv import load_dotenv
 
-HIST_KEY = "7b29a207a0de"
+load_dotenv()  # Load environment variables from .env
+
+HIST_KEY = os.getenv("HIST_KEY")
 BASE_URL = f'http://my.meteoblue.com/dataset/query?apikey={HIST_KEY}'
 
 CROP_OPTIMAL_VALUES = {

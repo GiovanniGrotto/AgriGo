@@ -1,3 +1,5 @@
+![Logo](https://ff695b5dd2960f41cb75835a324f0804.r2.cloudflarestorage.com/drp-cl/3285f654-c478-4f40-a112-2e420f55670d/610b46ed-7e08-428b-97d9-7e157f31ab00/f6a9bba5-c54a-4940-9d99-c8173cec9be6.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=fed7aac277aea51eca0c294ada409f61%2F20250320%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20250320T222128Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=f129b32198b2476feaee6c704bcffafbec95c9731654a1ff869d26521c7da438)
+
 # 🌾 **AgriGo x Syngenta Agricultural Risk Management System** 🌾
 
 **AgriGo** is a comprehensive agricultural management system designed to **enhance decision-making processes**, **mitigate risks**, and **optimize crop yields**. By leveraging cutting-edge technologies such as **data visualization**, **risk analysis prediction**, **disease identification through image recognition**, and **AI-powered chat support**, **AgriGo** empowers farmers and agricultural stakeholders with actionable insights and real-time assistance to effectively manage and protect their crops. 🌱🚜

@@ -28,7 +28,7 @@ def collect_feedback():
     print("Agriculture Risk Prediction System\n")
 
     weather, risk, suggestion = predict_agriculture_risk()
-    prediction_id = f"{weather}-{risk}"
+    prediction_id = f"{weather} -> {risk}"
 
     print(f"🌿Weather Condition: {weather}")
     print(f"⚠Identified Risk: {risk}")

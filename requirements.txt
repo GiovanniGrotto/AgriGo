@@ -1,7 +1,6 @@
 absl-py==2.1.0
 accelerate==1.5.2
 astunparse==1.6.3
-bitsandbytes==0.45.3
 certifi==2025.1.31
 charset-normalizer==3.4.1
 colorama==0.4.6

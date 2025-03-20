@@ -1,6 +1,7 @@
 import requests
 from collections import defaultdict
 
+
 def fetch_daily_temperatures(latitude, longitude):
     url = "https://services.cehub.syngenta-ais.com/api/Forecast/ShortRangeForecastDaily"
     params = {
@@ -20,6 +21,7 @@ def fetch_daily_temperatures(latitude, longitude):
         return response.json()
     else:
         return f"Error: {response.status_code}, {response.text}"
+
 
 def compute_diurnal_heat_stress(tmax, crop):
     crop_params = {
@@ -76,6 +78,7 @@ def compute_frost_stress(tmin, crop):
     else:
         return 9
 
+
 def compute_drought_risk(rainfall, evapotranspiration, soil_moisture, avg_temp):
     # Calculate the Drought Index (DI)
     DI = (rainfall - evapotranspiration + soil_moisture) / avg_temp
@@ -87,7 +90,8 @@ def compute_drought_risk(rainfall, evapotranspiration, soil_moisture, avg_temp):
         return "Medium risk"
     else:
         return "High risk"
-    
+
+
 def get_value_for_measure(daily_data, measure_label):
     """Extract the value for a specific measure (e.g., TempAir_DailyMax) from the daily data."""
     for entry in daily_data:
@@ -97,6 +101,7 @@ def get_value_for_measure(daily_data, measure_label):
             print(f"Found {measure_label} with value: {entry['dailyValue']}")
             return float(entry['dailyValue'])
     return None
+
 
 def print_daily_risks(daily_data, crop):
     """Print the risk levels for each day based on the data."""
@@ -135,6 +140,7 @@ def print_daily_risks(daily_data, crop):
         print(f"  Frost Stress: {frost_stress}")
         print(f"  Drought Risk: {drought_risk}")
         print()
+
 
 if __name__ == "__main__":
     daily_data = fetch_daily_temperatures(47.5, 7.5)

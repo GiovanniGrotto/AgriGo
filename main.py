@@ -7,6 +7,7 @@ from colorama import Fore, Style, init
 
 from llm import call_llm
 from disease_detection import predict_image
+from weather import predict_weather
 
 # Initialize colorama
 init(autoreset=True)
@@ -25,7 +26,7 @@ def main():
         print_colored("\nSelect a task to run:", Fore.CYAN)
         print_colored("1. Ask a Question", Fore.YELLOW)
         print_colored("2. Disease Detection", Fore.YELLOW)
-        print_colored("3. Task 3 (Placeholder)", Fore.YELLOW)
+        print_colored("3. Weather Prediction", Fore.YELLOW)
         print_colored("4. Exit", Fore.RED)
 
         # Get the user input
@@ -53,7 +54,11 @@ def main():
             except FileNotFoundError:
                 print_colored("Error: Image file not found!", Fore.RED)
         elif choice == '3':
-            print_colored("Task 3 is not yet implemented.", Fore.YELLOW)
+            lat = input(Fore.BLUE + "Insert the latitude and the latitude: " + Style.RESET_ALL)
+            long = input(Fore.BLUE + "Insert the latitude and the longitude: " + Style.RESET_ALL)
+            if not lat or not long:
+                lat, long = 47.5, 7.5
+            predict_weather(lat, long)
         elif choice == '4':
             print_colored("Exiting the program.", Fore.RED)
             sys.exit()  # Exit the program

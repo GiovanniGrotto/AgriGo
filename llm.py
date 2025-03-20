@@ -18,7 +18,7 @@ def call_llm(question: str):
         token=access_token  # Add the token here
     )
     if not question:
-        question = "What should I do if a plant is rusty"
+        question = "What should I do if a plant is rusty?"
 
     prompt = f"You are an assistant gardener, explain quickly and be concise on your answer. The question to answer is: {question}"
     response = llm_client.post(

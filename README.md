@@ -37,7 +37,7 @@ To get started with **AgriGo**, follow the instructions below for setting up the
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/AgriGo.git
+git clone https://github.com/GiovanniGrotto/AgriGo.git
 cd AgriGo
 ```
 ### Install the required libraries

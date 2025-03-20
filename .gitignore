@@ -1,0 +1,4 @@
+venv/
+model/best_model.keras
+.env
+.idea/

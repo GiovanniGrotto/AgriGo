@@ -27,7 +27,8 @@ def main():
         print_colored("1. Ask a Question", Fore.YELLOW)
         print_colored("2. Disease Detection", Fore.YELLOW)
         print_colored("3. Weather Prediction", Fore.YELLOW)
-        print_colored("4. Exit", Fore.RED)
+        print_colored("4. Risk Analysis and Recommendation", Fore.YELLOW)
+        print_colored("5. Exit", Fore.RED)
 
         # Get the user input
         choice = input(Fore.GREEN + "Enter the number corresponding to the task: " + Style.RESET_ALL)
@@ -60,6 +61,8 @@ def main():
                 lat, long = 47.5, 7.5
             predict_weather(lat, long)
         elif choice == '4':
+            pass
+        elif choice == '5':
             print_colored("Exiting the program.", Fore.RED)
             sys.exit()  # Exit the program
         else:

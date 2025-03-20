@@ -1,3 +1,5 @@
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 from huggingface_hub import InferenceClient
 import json
 import os
@@ -18,9 +20,9 @@ def call_llm(question: str):
         token=access_token  # Add the token here
     )
     if not question:
-        question = "What should I do if a plant is rusty?"
+        question = "How can I handle the hot soil problem?"
 
-    prompt = f"You are an assistant gardener, explain quickly and be concise on your answer. The question to answer is: {question}"
+    prompt = f"We are talking about agriculture. Answer to this question in ONLY ONE LINE: {question}"
     response = llm_client.post(
         json={
             "inputs": prompt,

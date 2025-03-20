@@ -1,3 +1,8 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # 3 = Suppress all INFO and WARNING messages
+import absl.logging
+absl.logging.set_verbosity(absl.logging.ERROR)
+
 import numpy as np
 from PIL import Image
 

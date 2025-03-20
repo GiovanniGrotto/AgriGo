@@ -1,5 +1,12 @@
+import absl.logging
+absl.logging.set_verbosity(absl.logging.ERROR)
+import os
+import logging
+logging.getLogger('tensorflow').setLevel(logging.ERROR)
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 import random
-import tensorflow as tf
 import matplotlib.pyplot as plt
 from PIL import Image
 import sys
@@ -13,6 +20,8 @@ from data_visualization.nitrogen_risk import nitrogen
 from data_visualization.phosphorus_risk import phosphorus
 from data_visualization.yield_risk import yield_
 from data_visualization.stress_buster import stress
+import tensorflow as tf
+
 
 # Initialize colorama
 init(autoreset=True)

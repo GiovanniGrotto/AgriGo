@@ -8,6 +8,7 @@ from colorama import Fore, Style, init
 from llm import call_llm
 from disease_detection import predict_image
 from weather import predict_weather
+from collect_user_feedback import collect_feedback
 
 # Initialize colorama
 init(autoreset=True)
@@ -28,7 +29,8 @@ def main():
         print_colored("2. Disease Detection", Fore.YELLOW)
         print_colored("3. Weather Prediction", Fore.YELLOW)
         print_colored("4. Risk Analysis and Recommendation", Fore.YELLOW)
-        print_colored("5. Exit", Fore.RED)
+        print_colored("5. User Feedback Collection", Fore.YELLOW)
+        print_colored("6. Exit", Fore.RED)
 
         # Get the user input
         choice = input(Fore.GREEN + "Enter the number corresponding to the task: " + Style.RESET_ALL)
@@ -41,11 +43,9 @@ def main():
         elif choice == '2':
             imgs = ["Healthy", "Rusty", "Powdery"]
             img_path = f"model/{random.choice(imgs)}.jpg"
-
             try:
                 image = Image.open(img_path)
                 prediction = predict_image(img_path, model)
-
                 # Display results
                 print_colored(f"Prediction: {prediction}", Fore.GREEN)
                 plt.imshow(image)
@@ -63,6 +63,8 @@ def main():
         elif choice == '4':
             pass
         elif choice == '5':
+            collect_feedback()
+        elif choice == '6':
             print_colored("Exiting the program.", Fore.RED)
             sys.exit()  # Exit the program
         else:

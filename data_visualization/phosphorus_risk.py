@@ -56,15 +56,41 @@ class PhosphorusStress:
     def recommend_biosimulants(self):
         PUE = self.calculate_PUE()
         
-        if PUE < 0.05:
-            return "Low NUE - Recommend Biosimulants"
-        elif PUE < 0.10:
-            return "Moderate NUE - Recommend Biosimulants"
-        elif PUE < 0.15:
-            return "Good NUE - No biosimulants needed"
-        else:
-            return "Excellent NUE - No biosimulants needed"
+        base_recommendation = """
+    🔬 Recommended Biosimulant Solution:
+    A innovative product based on 3 endophytic bacteria strains:
+    • Sphingobium salicis
+    • Pseudomonas siliginis
+    • Curtobacterium salicis
+    
+    ✨ Benefits:
+    """
         
+        if PUE < 0.05:
+            return f"{base_recommendation}\n🔴 Low PUE - Strongly Recommend Biosimulants\n" + """
+        • Enhanced N2 fixation from air
+        • Improved NO3 and NH4 uptake
+        • Maximum P-solubilization
+        • Enhanced nutrient transport
+        • Full spectrum micronutrient solubilization
+        """
+        elif PUE < 0.10:
+            return f"{base_recommendation}\n🟡 Moderate PUE - Recommend Biosimulants\n" + """
+        • Moderate N2 fixation support
+        • Enhanced P-solubilization
+        • Improved nutrient transport
+        • Selective micronutrient solubilization
+        """
+        elif PUE < 0.15:
+            return f"{base_recommendation}\n🟢 Good PUE - Optional Biosimulants\n" + """
+        • Maintenance of nutrient uptake
+        • Supportive P-solubilization
+        • Basic micronutrient support
+        """
+        else:
+            return "🌟 Excellent PUE - No biosimulants needed at this time"
+
+    @staticmethod
     def fetch_precipitation(location_coords, location_name, timestamp_range):
         """Fetches total precipitation over the given period."""
         payload = {
@@ -85,6 +111,7 @@ class PhosphorusStress:
             return sum(data[0]['codes'][0]['dataPerTimeInterval'][0]['data'][0])
         return None
 
+    @staticmethod
     def fetch_ph(location_coords, location_name, timestamp_range):
         """Fetches soil pH from the dataset."""
         payload = {
@@ -105,6 +132,7 @@ class PhosphorusStress:
             return data[0]['codes'][0]['dataPerTimeInterval'][0]['data'][0][0]
         return None
 
+    @staticmethod
     def fetch_soil_moisture(location_coords, location_name, timestamp_range):
         payload = {
             "units": {"temperature": "C", "velocity": "km/h", "length": "metric", "energy": "watts"},
@@ -127,18 +155,55 @@ class PhosphorusStress:
             return sum(data)/len(data)
         return None
 
-location_coords = [7.57327, 47.558399, 279]  # lon, lat, altitude
-crop_name = "Rice"
-crop_yield = 8000  # kg/ha
-nitrogen_applied = 200  # kg/ha
-start_date_colture = "2025-01-01T+00:00"
-today_date = datetime.datetime.now().strftime("%Y-%m-%dT+00:00")
-timestamp_range = f"{start_date_colture}/{today_date}"
-actual_rainfall = PhosphorusStress.fetch_precipitation(location_coords, crop_name, timestamp_range)
-actual_soil_moisture = PhosphorusStress.fetch_soil_moisture(location_coords, crop_name, timestamp_range)
-actual_pH = PhosphorusStress.fetch_ph(location_coords, crop_name, timestamp_range)
+def main():
+        
+    # Get user input
+    print("\n📝 Please enter the following information:")
+    
+    # Crop selection
+    available_crops = ["Soyabean", "Corn", "Cotton", "Rice", "Wheat"]
+    print("\nAvailable crops:", ", ".join(available_crops))
+    while True:
+        crop_name = input("Enter crop name: ").capitalize()
+        if crop_name in available_crops:
+            break
+        print("❌ Invalid crop. Please choose from the available options.")
 
+    # Get other inputs
+    yield_tonnes_per_ha = float(input("Enter yield (tonnes/ha): "))
+    phosphorus_applied_kg_per_ha = float(input("Enter phosphorus applied (kg/ha): "))
+    
+    # Location input
+    print("\n📍 Enter location coordinates:")
+    lon = float(input("Longitude: "))
+    lat = float(input("Latitude: "))
+    alt = float(input("Altitude: "))
+    location_coords = [lon, lat, alt]
 
-crop = PhosphorusStress("Corn", yield_tonnes_per_ha=5, phosphorus_applied_kg_per_ha=40, actual_rainfall=actual_rainfall, actual_soil_moisture=actual_soil_moisture, actual_pH=actual_pH)
-print("Phosphorus Use Efficiency:", crop.calculate_PUE())
-print("Recommendation:", crop.recommend_biosimulants())
+    # Date input
+    start_date = input("Enter start date (YYYY-MM-DD): ")
+    start_date_colture = f"{start_date}T+00:00"
+    today_date = datetime.datetime.now().strftime("%Y-%m-%dT+00:00")
+    timestamp_range = f"{start_date_colture}/{today_date}"
+
+    print("\n⏳ Fetching environmental data...")
+    actual_rainfall = PhosphorusStress.fetch_precipitation(location_coords, crop_name, timestamp_range)
+    actual_soil_moisture = PhosphorusStress.fetch_soil_moisture(location_coords, crop_name, timestamp_range)
+    actual_pH = PhosphorusStress.fetch_ph(location_coords, crop_name, timestamp_range)
+
+    print("\n📊 Environmental Conditions:")
+    print(f"Rainfall: {actual_rainfall:.2f} mm")
+    print(f"Soil Moisture: {actual_soil_moisture:.2f}%")
+    print(f"Soil pH: {actual_pH:.2f}")
+
+    # Create instance and calculate
+    crop = PhosphorusStress(crop_name, yield_tonnes_per_ha, phosphorus_applied_kg_per_ha, 
+                           actual_rainfall, actual_soil_moisture, actual_pH)
+
+    print("\n🔍 Results:")
+    print(f"Phosphorus Use Efficiency: {crop.calculate_PUE():.3f}")
+    print("\n💡 Recommendation:")
+    print(crop.recommend_biosimulants())
+
+if __name__ == "__main__":
+    main()

@@ -25,24 +25,27 @@ class NitrogenStressRisk:
         optimal_precipitation = NitrogenStressRisk.CROP_OPTIMAL_VALUES[crop_name]["precipitation"]
         optimal_soil_moisture = NitrogenStressRisk.CROP_OPTIMAL_VALUES[crop_name]["soil_moisture"]
         
-        # Compute Rainfall Factor (RF)
-        optimal_rainfall_avg = sum(optimal_precipitation) / 2  # Take the midpoint of optimal range
-        rainfall_factor = actual_rainfall / optimal_rainfall_avg
+        rainfall_factor = actual_rainfall / (sum(optimal_precipitation) / 2)
+        soil_moisture_factor = actual_soil_moisture / (sum(optimal_soil_moisture) / 2)
         
-        # Compute Soil Moisture Factor (SMF)
-        optimal_soil_moisture_avg = sum(optimal_soil_moisture) / 2
-        soil_moisture_factor = actual_soil_moisture / optimal_soil_moisture_avg
-        
-        # Compute NUE
         nue = (crop_yield / nitrogen_applied) * rainfall_factor * soil_moisture_factor
         
-        # Categorize NUE Level
         if nue > 40:
-            nue_category = "High NUE - No biosimulants needed"
+            nue_category = "✅ High NUE - No biosimulants needed\n" \
+                          "Your crop is performing well in terms of nitrogen use efficiency!"
         elif 20 <= nue <= 40:
-            nue_category = "Moderate NUE - Biosimulants recommended"
+            nue_category = "⚠️ Moderate NUE - Biosimulants recommended\n" \
+                          "Consider applying our innovative bacterial consortium:\n" \
+                          "• 🦠 Enhanced N fixation from air and soil\n" \
+                          "• 🌱 Improved P mobilization and uptake\n" \
+                          "• 🔄 Better nutrient cycling and availability"
         else:
-            nue_category = "Low NUE - Biosimulants strongly recommended"
+            nue_category = "❗ Low NUE - Biosimulants strongly recommended\n" \
+                          "Immediate application of our bacterial solution is advised:\n" \
+                          "• 🦠 Triple-strain bacterial formula (Sphingobium, Pseudomonas, Curtobacterium)\n" \
+                          "• 🌿 Enhanced nitrogen fixation and phosphate mobilization\n" \
+                          "• 🔋 Improved macro and micronutrient availability\n" \
+                          "• 💪 Better stress tolerance and nutrient use efficiency"
         
         return {
             "NUE": nue,
@@ -50,7 +53,7 @@ class NitrogenStressRisk:
             "Soil Moisture Factor": soil_moisture_factor,
             "Recommendation": nue_category
         }
-    
+
     @staticmethod
     def fetch_precipitation(location_coords, location_name, timestamp_range):
         """Fetches total precipitation over the given period."""
@@ -74,6 +77,7 @@ class NitrogenStressRisk:
 
     @staticmethod
     def fetch_soil_moisture(location_coords, location_name, timestamp_range):
+        """Fetches average soil moisture over the given period."""
         payload = {
             "units": {"temperature": "C", "velocity": "km/h", "length": "metric", "energy": "watts"},
             "geometry": {"type": "MultiPoint", "coordinates": [location_coords], "locationNames": [location_name]},
@@ -84,7 +88,7 @@ class NitrogenStressRisk:
                 "gapFillDomain": "NEMSGLOBAL",
                 "timeResolution": "daily",
                 "codes": [
-                    {"code": 144, "level": "0-7 cm down", "aggregation": "mean"},  # Soil moisture
+                    {"code": 144, "level": "0-7 cm down", "aggregation": "mean"},
                 ]
             }]
         }
@@ -95,17 +99,55 @@ class NitrogenStressRisk:
             return sum(data)/len(data)
         return None
 
+def print_crop_list():
+    print("Available crops:")
+    for crop in NitrogenStressRisk.CROP_OPTIMAL_VALUES.keys():
+        print(f"• {crop}")
+    print()
 
-# Example usage
 if __name__ == "__main__":
-    location_coords = [7.57327, 47.558399, 279]  # lon, lat, altitude
-    crop_name = "Rice"
-    crop_yield = 8000  # kg/ha
-    nitrogen_applied = 200  # kg/ha
-    start_date_colture = "2025-01-01T+00:00"
-    today_date = datetime.datetime.now().strftime("%Y-%m-%dT+00:00")
-    timestamp_range = f"{start_date_colture}/{today_date}"
-    actual_rainfall = NitrogenStressRisk.fetch_precipitation(location_coords, crop_name, timestamp_range)
-    actual_soil_moisture = NitrogenStressRisk.fetch_soil_moisture(location_coords, crop_name, timestamp_range)
-    result = NitrogenStressRisk.compute_nue(crop_name, crop_yield, nitrogen_applied, actual_rainfall, actual_soil_moisture)
-    print(result)
+    print_crop_list()
+    
+    try:
+        # Get user input
+        crop_name = input("🌱 Enter crop name: ")
+        while crop_name not in NitrogenStressRisk.CROP_OPTIMAL_VALUES:
+            print("❌ Invalid crop name. Please choose from the available crops.")
+            crop_name = input("🌱 Enter crop name: ")
+        
+        crop_yield = float(input("📊 Enter crop yield (kg/ha): "))
+        nitrogen_applied = float(input("💉 Enter nitrogen applied (kg/ha): "))
+        
+        print("\n📍 Location coordinates")
+        lon = float(input("Enter longitude: "))
+        lat = float(input("Enter latitude: "))
+        alt = float(input("Enter altitude (meters): "))
+        location_coords = [lon, lat, alt]
+        
+        print("\n📅 Date range")
+        start_date = input("Enter start date (YYYY-MM-DD): ")
+        start_date_colture = f"{start_date}T+00:00"
+        today_date = datetime.datetime.now().strftime("%Y-%m-%dT+00:00")
+        timestamp_range = f"{start_date_colture}/{today_date}"
+
+        print("\n🔄 Fetching weather data...")
+        actual_rainfall = NitrogenStressRisk.fetch_precipitation(location_coords, crop_name, timestamp_range)
+        actual_soil_moisture = NitrogenStressRisk.fetch_soil_moisture(location_coords, crop_name, timestamp_range)
+
+        if actual_rainfall is None or actual_soil_moisture is None:
+            print("❌ Error fetching weather data. Please check your inputs and try again.")
+        else:
+            print("\n📊 Results:")
+            result = NitrogenStressRisk.compute_nue(crop_name, crop_yield, nitrogen_applied, actual_rainfall, actual_soil_moisture)
+            print(f"NUE Score: {result['NUE']:.2f}")
+            print(f"Rainfall Factor: {result['Rainfall Factor']:.2f}")
+            print(f"Soil Moisture Factor: {result['Soil Moisture Factor']:.2f}")
+            print("\n🔍 Recommendation:")
+            print(result['Recommendation'])
+
+    except ValueError as e:
+        print(f"❌ Error: Invalid input - {str(e)}")
+    except Exception as e:
+        print(f"❌ An unexpected error occurred: {str(e)}")
+    finally:
+        print("\n🌾 Thank you for using the Nitrogen Stress Risk Calculator! 🌾")

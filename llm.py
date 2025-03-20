@@ -1,6 +1,9 @@
 from huggingface_hub import InferenceClient
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Replace this with your Hugging Face access token
 access_token = os.getenv("ACCESS_TOKEN")

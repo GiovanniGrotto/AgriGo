@@ -1,6 +1,9 @@
 import requests
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env
 
 HIST_KEY = os.getenv("HIST_KEY")
 BASE_URL = f'http://my.meteoblue.com/dataset/query?apikey={HIST_KEY}'

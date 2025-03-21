@@ -106,6 +106,7 @@ def compute_yield_risk(GDD, P, pH, N, crop):
 
     return yield_risk
 
+
 def recommend_biostimulant(yield_risk):
     """Prints recommendations based on yield risk."""
     T1, T2, T3 = 5000, 10000, 20000  # Example threshold values, adjust based on real data

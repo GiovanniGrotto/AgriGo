@@ -46,6 +46,9 @@ cd AgriGo
 pip install -r requirements.txt
 ```
 
+### :warning: Important:
+
+You need to fill the `.env` file with your own API keys and Hugging Face access token.
 ### Start the main program to run all the application functionalities
 
 ```bash
